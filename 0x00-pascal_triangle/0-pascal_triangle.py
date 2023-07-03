@@ -1,22 +1,28 @@
 #!/usr/bin/python3
+
+"""
+Pascal's Triangle
+"""
+
+
 def pascal_triangle(n):
-  """
-  Returns a list of lists of integers representing the Pascal's triangle of n.
-
-  Returns an empty list if n <= 0
-  You can assume n will be always an integer
-  """
-
-  if n <= 0:
-    return []
-
-  triangle = [[1]]
-  for i in range(1, n + 1):
-    row = [1]
-    for j in range(1, i):
-      row.append(triangle[i - 1][j - 1] + triangle[i - 1][j])
-    row.append(1)
-    triangle.append(row)
-
-  return triangle
-
+    """Print Pascal's Triangle
+    Args:
+        n (int): Size of the pascal triangle
+    """
+    res = []
+    if (n <= 0):
+        return res
+    else:
+        for x in range(n+1):
+            temp = []
+            # first element is always 1
+            c = 1
+            for y in range(1, x+1):
+                # first value in a line is always 1
+                temp.append(c)
+                # using Binomial Coefficient
+                c = c * (x - y) // y
+            if (len(temp)):
+                res.append(temp)
+    return res
