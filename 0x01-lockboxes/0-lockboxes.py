@@ -1,33 +1,42 @@
 #!/usr/bin/python3
- """ Determines if all the boxes can be opened. """
+"""
+Lockboxes
+"""
 
 
 def canUnlockAll(boxes):
-  """
-  Determines if all the boxes can be opened.
+    """Check if all boxes can be opened
+    Args:
+        boxes (arr[int]): Boxes contains the key to open other boxes
+    Return:
+        (bool): True otherwise false
+    """
+    unlocked = [0]
+    for boxID, box in enumerate(boxes):
+        if not box:
+            continue
+        for key in box:
+            if key < len(boxes) and key not in unlocked and key != boxID:
+                unlocked.append(key)
+    if len(unlocked) == len(boxes):
+        return True
+    return False
 
-  Args:
-    boxes: A list of lists
-    A key with the same number as a box opens that box
-    You can assume all keys will be positive integers
-    There can be keys that do not have boxes
-    The first box boxes[0] is unlocked
-  Returns:
-    True if all boxes can be opened, else False
-  """
 
-  # Initialize a list to track which boxes are unlocked.
-  unlocked = [False] * len(boxes)
-
-  # Recursively check if all boxes can be opened, starting from the second box.
-  for i in range(1, len(boxes)):
-    if not unlocked[i]:
-      # If the box is not unlocked, check if it can be unlocked with any of the keys in the other boxes.
-      for key in boxes[i]:
-        if key < len(boxes) and unlocked[key]:
-          unlocked[i] = True
-          break
-
-  # Return True if all boxes are unlocked, else False.
-  return all(unlocked)
-
+def canUnlockAll2(boxes):
+    """Check if all boxes can be opened
+    Args:
+        boxes (arr[int]): Boxes contains the key to open other boxes
+    Return:
+        (bool): True otherwise false
+    """
+    unlocked = set()
+    for boxID, box in enumerate(boxes):
+        if len(box) == 0 or boxID == 0:
+            unlocked.add(boxID)
+        for key in box:
+            if key < len(boxes) and key != boxID:
+                unlocked.add(key)
+    if len(unlocked) == len(boxes):
+        return True
+    return False
