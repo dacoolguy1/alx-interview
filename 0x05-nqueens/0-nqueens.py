@@ -1,70 +1,58 @@
 #!/usr/bin/python3
-"""
-Module for 0x0C. N Queens.
-Holberton School
-Specializations - Interview Preparation ― Algorithms
-"""
-from sys import argv, exit
+'''
+Module that solves the N Queens puzzle
+'''
+import sys
 
+def is_safe(board, row, col, n):
+    # Check the left side of the current row
+    for i in range(col):
+        if board[row][i] == 1:
+            return False
+    
+    # Check upper diagonal on the left
+    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+    
+    # Check lower diagonal on the left
+    for i, j in zip(range(row, n), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+    
+    return True
 
-def solveNQueens(n):
-    """Program that solves the N queens problem"""
-    res = []
-    queens = [-1] * n
-    # queens is a one-dimension array, like [1, 3, 0, 2] means
-    # index represents row no and value represents col no
+def solve_nqueens_util(board, col, n, solutions):
+    if col == n:
+        solutions.append([[i, row] for i, row in enumerate(board)])
+        return
+    
+    for i in range(n):
+        if is_safe(board, i, col, n):
+            board[i][col] = 1
+            solve_nqueens_util(board, col + 1, n, solutions)
+            board[i][col] = 0
 
-    def dfs(index):
-        """Recursively resolves the N queens problem"""
-        if index == len(queens):  # n queens have been placed correctly
-            res.append(queens[:])
-            return  # backtracking
-        for i in range(len(queens)):
-            queens[index] = i
-            if valid(index):  # pruning
-                dfs(index + 1)
+def solve_nqueens(n):
+    if n < 4:
+        print("N must be at least 4")
+        sys.exit(1)
 
-    # check whether nth queens can be placed
-    def valid(n):
-        """Method that checks if a position in the board is valid"""
-        for i in range(n):
-            if abs(queens[i] - queens[n]) == n - i:  # same diagonal
-                return False
-            if queens[i] == queens[n]:  # same column
-                return False
-        return True
+    board = [[0 for _ in range(n)] for _ in range(n)]
+    solutions = []
+    solve_nqueens_util(board, 0, n, solutions)
 
-    # given queens = [1,3,0,2] this function returns
-    # [[0, 1], [1, 3], [2, 0], [3, 2]]
-
-    def make_all_boards(res):
-        """Method that builts the List that be returned"""
-        actual_boards = []
-        for queens in res:
-            board = []
-            for row, col in enumerate(queens):
-                board.append([row, col])
-            actual_boards.append(board)
-        return actual_boards
-
-    dfs(0)
-    return make_all_boards(res)
-
+    for solution in solutions:
+        print(solution)
 
 if __name__ == "__main__":
-    if len(argv) < 2:
-        print('Usage: nqueens N')
-        exit(1)
-    try:
-        n = int(argv[1])
-    except ValueError:
-        print('N must be a number')
-        exit(1)
+    if len(sys.argv) != 2:
+        print("Usage: nqueens N")
+        sys.exit(1)
 
-    if n < 4:
-        print('N must be at least 4')
-        exit(1)
-    else:
-        result = solveNQueens(n)
-        for row in result:
-            print(row)
+    try:
+        N = int(sys.argv[1])
+        solve_nqueens(N)
+    except ValueError:
+        print("N must be a number")
+        sys.exit(1)
