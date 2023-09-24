@@ -2,8 +2,7 @@
 """ N queens """
 import sys
 
-
-if len(sys.argv) > 2 or len(sys.argv) < 2:
+if len(sys.argv) != 2:
     print("Usage: nqueens N")
     exit(1)
 
@@ -17,7 +16,6 @@ if int(sys.argv[1]) < 4:
 
 n = int(sys.argv[1])
 
-
 def queens(n, i=0, a=[], b=[], c=[]):
     """ find possible positions """
     if i < n:
@@ -27,18 +25,9 @@ def queens(n, i=0, a=[], b=[], c=[]):
     else:
         yield a
 
-
 def solve(n):
     """ solve """
-    k = []
-    i = 0
     for solution in queens(n, 0):
-        for s in solution:
-            k.append([i, s])
-            i += 1
-        print(k)
-        k = []
-        i = 0
-
+        print([[i, j] for i, j in enumerate(solution)])
 
 solve(n)
